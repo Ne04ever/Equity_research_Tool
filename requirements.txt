@@ -1,4 +1,5 @@
 langchain
+cohere
 langchain-huggingface
 langchain-community
 python-dotenv
