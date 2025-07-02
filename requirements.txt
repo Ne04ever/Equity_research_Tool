@@ -1,4 +1,5 @@
 langchain
+sentence-transformers
 cohere
 langchain-huggingface
 langchain-community
