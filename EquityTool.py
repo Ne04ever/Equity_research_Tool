@@ -12,7 +12,6 @@ from langchain.llms import Cohere
 
 load_dotenv()
 llm = Cohere(max_tokens=256, temperature=0.75)
-
 model_name = "sentence-transformers/all-mpnet-base-v2"
 model_kwargs = {'device': 'cpu'}
 encode_kwargs = {'normalize_embeddings': False}
@@ -21,16 +20,28 @@ embeddings = HuggingFaceEmbeddings(
     model_kwargs=model_kwargs,
     encode_kwargs=encode_kwargs
 )
-
 file_path = "vector_index.pkl"
 
 # Title should appear before the query input
 st.title("Equity Research Tool")
-st.sidebar.title("News Articles URL")
 
+# Info box with instructions
+st.info("""
+**How to use this app:**
+1. Paste news URLs in the sidebar (max 3 links)
+2. Click "Process URLs" 
+3. Ask questions about the content
+
+**Please note:** Some financial news sites block access for Cohere. In this case, the app won't work, so choose websites accordingly.
+
+**Example:**
+- Paste this site: https://www.nerdwallet.com/article/investing/tbill-yields
+- Ask: "Summarize the news"
+""")
+
+st.sidebar.title("News Articles URL")
 button = st.sidebar.button('Process URLs')
 urls = []
-
 for i in range(3):
     url = st.sidebar.text_input(f"URL {i+1}")
     urls.append(url)
@@ -41,20 +52,16 @@ if button:
     loaders = UnstructuredURLLoader(urls=urls)
     placeholder.text('Data loading ........')
     data = loaders.load()
-
     text_splitter = RecursiveCharacterTextSplitter(
         separators=['\n\n', '\n', '.', ','],
         chunk_size=1000
     )
-
     placeholder.text('Text splitting ........')
-
     # Split documents into chunks
     docs = text_splitter.split_documents(data)
     vectorindex_hug = FAISS.from_documents(docs, embeddings)
     placeholder.text('Vector embedding started ........')
     time.sleep(2)
-
     # Save the vector index
     with open(file_path, "wb") as f:
         pickle.dump(vectorindex_hug, f)
