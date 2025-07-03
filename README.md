@@ -20,3 +20,5 @@ This Equity Research Tool enables analysts and users to input URLs of financial 
     * Pass them to the Cohere LLM
     * Return a natural language answer with source(s)
 
+
+### Live demo: https://equityresearchtool-wmw5ttj8wpb2ozjrmtwayj.streamlit.app/
